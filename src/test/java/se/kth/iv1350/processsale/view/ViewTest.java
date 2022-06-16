@@ -10,12 +10,26 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 public class ViewTest {
 
     private View instance;
     private ByteArrayOutputStream printoutBuffer;
     private PrintStream originalSysOut;
+    
+    @BeforeEach
+   public void setUpStreams() {
+   originalSysOut = System.out;
+  printoutBuffer = new ByteArrayOutputStream();
+  System.setOut(new PrintStream(printoutBuffer));
+ }
+   @AfterEach
+  public void cleanUpStreams() {
+   printoutBuffer = null;
+   System.setOut(originalSysOut);
+  }
 
     @Test
     public void testSampleExecution() throws Exception {
@@ -23,15 +37,8 @@ public class ViewTest {
         Printer printer = new Printer();
         Controller contr = new Controller(systemCreator, printer);
         instance = new View(contr);
-
-        printoutBuffer = new ByteArrayOutputStream();
-        PrintStream inMemSysOut = new PrintStream(printoutBuffer);
-        originalSysOut = System.out;
-        System.setOut(inMemSysOut);
-
         instance.sampleExecution();
         String printout = printoutBuffer.toString();
-
         String expectedOutputIdentifier934632865 = "934632865";
         String expectedOutputIdentifier121936821 = "121936821";
         String expectedOutputIdentifier531632821 = "531632821";
