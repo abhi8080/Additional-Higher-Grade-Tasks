@@ -6,19 +6,28 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 public class MainTest {
 
     private ByteArrayOutputStream printoutBuffer;
     private PrintStream originalSysOut;
+    
+     @BeforeEach
+   public void setUpStreams() {
+   originalSysOut = System.out;
+  printoutBuffer = new ByteArrayOutputStream();
+  System.setOut(new PrintStream(printoutBuffer));
+ }
+   @AfterEach
+  public void cleanUpStreams() {
+   printoutBuffer = null;
+   System.setOut(originalSysOut);
+  }
 
     @Test
     public void testMain() throws Exception {
-        printoutBuffer = new ByteArrayOutputStream();
-        PrintStream inMemSysOut = new PrintStream(printoutBuffer);
-        originalSysOut = System.out;
-        System.setOut(inMemSysOut);
-
         String[] args = null;
         Main.main(args);
         String printout = printoutBuffer.toString();
